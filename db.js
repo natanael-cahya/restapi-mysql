@@ -8,12 +8,10 @@ const con = mysql.createConnection({
     database : 'dbrestapi'
 })
 
-con.connect((err) == {
-    if(err){
-        throw err;
-    }else{
+con.connect((err) => {
+    if(err)throw err;
         console.log('DB Terkoneksi')
-    }
+    
 })
 
 module.exports = con;
