@@ -49,7 +49,13 @@ exports.login = (req,res) => {
                console.log(err)
             }else{
                 if(rows.length == 1){
-                    let token = jwt.sign({rows},config.secret,{
+                    let dataPayload = {
+                        'id':rows[0].id_user,
+                        'email':rows[0].email,
+                        'role':rows[0].role
+                    }
+                    //console.log(id)
+                    let token = jwt.sign({dataPayload},config.secret,{
                         expiresIn:1440
                     })
                     id_user = rows[0].id_user;
@@ -80,3 +86,7 @@ exports.login = (req,res) => {
         })
     }
 
+
+exports.secretz = (req,res) => {
+    response.ok('Halaman Coba untuk Role = 2',res)
+}
