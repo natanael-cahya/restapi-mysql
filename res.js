@@ -1,3 +1,5 @@
+//const { token } = require("morgan")
+
 `use strict`
 
 exports.ok = (values , res) =>{
@@ -16,6 +18,7 @@ exports.err = (values , res) =>{
     res.json(data)
     res.end()
 }
+
 
 //response Nested matkul
 

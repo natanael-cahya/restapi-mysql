@@ -5,6 +5,7 @@ let response = require('../res')
 let jwt = require('jsonwebtoken')
 let config = require('../config/secret')
 let ip = require('ip')
+const con = require('../db')
 
 //register
 
@@ -34,5 +35,48 @@ exports.regis = (req,res) => {
         
     })
 
-}
 
+//controller Login
+
+exports.login = (req,res) => {
+    let post = {
+        email : req.body.email,
+        password : md5(req.body.password)
+    }
+        connection.query(`SELECT * FROM user WHERE email='${post.email}' AND password='${post.password}'`,
+        (err,rows)=> {
+            if(err){
+               console.log(err)
+            }else{
+                if(rows == 1){
+                    let token = jwt.sign({rows},config.secret,{
+                        expiresIn:1440
+                    })
+                    id_user = rows[0].id
+
+                    let data = {
+                        id_user :id_user,
+                        access_token : token,
+                        ip_address: ip.address()
+                    }
+                     connection.query(`INSERT INTO user (id_user,akses_token,ip_address) VALUES('${data.id_user}','${data.access_token}','${data.ip_address}')`,(req,err) => {
+                         if(err){
+                             console.log(err)
+                         }else{
+                            
+                            res.json({
+                                 success  : true,
+                                 message:'Token generated',
+                                 token:token,
+                                 currUser: data.id_user
+                             })
+                         }
+                     })
+                }else{
+                    res.json({"Error":"true","Message":"Email/Password Wrong!!"})
+                }
+            }
+            
+        })
+    }
+}
