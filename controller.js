@@ -42,7 +42,51 @@ exports.tbData = (req,res) => {
             response.err('Data gagal ditambah',res)
         }else{
             response.ok('Berhasil Ditambah',res)
-            console.log(rows)
         }
     })
+}
+
+exports.edData = (req,res) => {
+    let param = req.params.nip
+
+    let nim = req.body.nim
+    let nama = req.body.nama
+    let jurusan = req.body.jurusan
+
+    connection.query(`UPDATE mahasiswa SET nim='${nim}',nama='${nama}',jurusan='${jurusan}' WHERE nip='${param}'`,(err,rows,fields) => {
+        if(err){
+            console.log(err)
+            response.err('Data gagal di Update',res)
+        }else{
+            response.ok('Data berhasil diubah',res)
+        }
+    })
+
+}
+
+exports.delData = (req,res) => {
+    let param = req.params.nip
+
+    connection.query(`DELETE FROM mahasiswa WHERE nip = '${param}'`, (err,rows,fields) => {
+        if(err) {
+            response.err('Data Gagal Dihapus',res)
+        }else{
+            response.ok(`Data Berhasil di hapus no id : ${param}`,res)
+        }
+    })
+}
+
+//tampil matkul group
+exports.vGroup = (req,res) => {
+    connection.query('SELECT mahasiswa.nip , mahasiswa.nim , mahasiswa.nama , mahasiswa.jurusan , matkul.matkul , matkul.sks FROM krs JOIN matkul JOIN mahasiswa WHERE krs.id_matkul = matkul.id_matkul AND krs.nip = mahasiswa.nip ORDER BY mahasiswa.nip',
+    (err,rows,fields) => {
+        if(err){
+            response.err('Data error',res)
+        }else{
+            response.okeNested(rows,res)
+        }
+    })
+
+
+
 }
