@@ -34,7 +34,7 @@ exports.regis = (req,res) => {
             }
         
     })
-
+}
 
 //controller Login
 
@@ -52,18 +52,17 @@ exports.login = (req,res) => {
                     let token = jwt.sign({rows},config.secret,{
                         expiresIn:1440
                     })
-                    id_user = rows[0].id
-
+                    id_user = rows[0].id_user;
+                    //console.log(id_user)
                     let data = {
                         id_user :id_user,
                         access_token : token,
                         ip_address: ip.address()
                     }
-                     connection.query(`INSERT INTO akses_token SET id_user='${data.id_user}',akses_token='${data.access_token}',ip_address='${data.ip_address}')`,(err,rows) => {
+                     connection.query(`INSERT INTO akses_token SET id_user='${data.id_user}',akses_token='${data.access_token}',ip_address='${data.ip_address}'`,(err,rows) => {
                          if(err){
                              console.log(err)
                          }else{
-                            
                             res.json({
                                  success  : true,
                                  message:'Token generated',
@@ -73,10 +72,11 @@ exports.login = (req,res) => {
                          }
                      })
                 }else{
-                    res.json({"Error":"true","Message":"Email/Password Wrong!!"})
-                }
+                    res.json({"Error":true,"Message":"Email/Password Wrong!!"});
+                   // console.log(rows.id)
+                    }
             }
             
         })
     }
-}
+
