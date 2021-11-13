@@ -22,9 +22,9 @@ exports.regis = (req,res) => {
             response.err(err,res)
         }else{
             if(rows.length == 0){
-                connection.query(`INSERT INTO user SET ${post}`, (err,rows) => {
+                connection.query(`INSERT INTO user SET email='${post.email}',password='${post.password}',role='${post.role}'`, (err,rows) => {
                     if(err){
-                        response.err('Gagal Daftar silahkan cek Ulang',res)
+                        response.err(err,res)
                     }else{
                         response.ok('Berhasil Daftar',res)
                     }
