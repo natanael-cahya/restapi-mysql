@@ -43,12 +43,12 @@ exports.login = (req,res) => {
         email : req.body.email,
         password : md5(req.body.password)
     }
-        connection.query(`SELECT * FROM user WHERE email='${post.email}' AND password='${post.password}'`,
-        (err,rows)=> {
+        let query = `SELECT * FROM user WHERE email='${post.email}' AND password='${post.password}'`
+        connection.query(query,(err,rows)=> {
             if(err){
                console.log(err)
             }else{
-                if(rows == 1){
+                if(rows.length == 1){
                     let token = jwt.sign({rows},config.secret,{
                         expiresIn:1440
                     })
@@ -59,7 +59,7 @@ exports.login = (req,res) => {
                         access_token : token,
                         ip_address: ip.address()
                     }
-                     connection.query(`INSERT INTO user (id_user,akses_token,ip_address) VALUES('${data.id_user}','${data.access_token}','${data.ip_address}')`,(req,err) => {
+                     connection.query(`INSERT INTO akses_token SET id_user='${data.id_user}',akses_token='${data.access_token}',ip_address='${data.ip_address}')`,(err,rows) => {
                          if(err){
                              console.log(err)
                          }else{
